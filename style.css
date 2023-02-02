@@ -56,7 +56,7 @@
       }
 
       textarea:focus, input:focus {
-        outline-color: #e348c4;
+        outline-color: #1021de;
     }
 
       form {
@@ -89,10 +89,11 @@
         width: 10%;
         border-radius: 15px;
         border: none;
-        background-color: #b600f8;
+        background-color: #1021de;
         color: white;
         text-transform: uppercase;
         font-size: 1rem;
+        cursor: pointer;
       }
       
 .todo-list {
@@ -131,8 +132,27 @@
     color: white;
     text-transform: uppercase;
     font-size: 1rem;
+    cursor: pointer;
     
 
+}
+
+.save-btn {
+  width: 12%;
+  height: 2rem;
+  border-radius: 15px;
+  border: none;
+  background-color: #1021de;
+  color: white;
+  text-transform: uppercase;
+  font-size: 1rem;
+  cursor: pointer;
+  
+
+}
+
+.edit-btn:hover, .delete-btn:hover, .save-btn:hover {
+  background-color: #1021de;
 }
 
 .generated-input {
@@ -160,11 +180,99 @@ li {
 }
 
 .checkbox {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 .completed {
   font-size: 1.5rem;
 }
 
+.hideBtn {
+  display: none;
+}
+
+.save-btn {
+  padding: none;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 2em;
+  width: 2em;
+  background-color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  content: '\002714';
+}
+
+input[type="checkbox"]:hover {
+  background-color: lightgreen;
+  opacity: .5;
+  content: '';
+}
+
+input[type="checkbox"]:checked {
+  background-color: lightgreen;
+  opacity: 1;
+  
+}
+
+input[type="checkbox"]:checked::after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: '\002714';
+  font-size: 20px;
+ 
+}
+
+.test {
+  background-color: lightgreen;
+  text-decoration: line-through;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-shadow: none;
+  border: none;
+}
+
+.select {
+  margin: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+select {
+  color:#ba00fd;
+  width: 10rem;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: .5rem;
+}
+
+.select::after {
+  content: "\25BC";
+  position: absolute;
+  background: #e348c4;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  padding: .5rem;
+
+  
+}
+
+.select:hover::after {
+  background:#1021de;
+  color: #1021de;
+}
+
+.removeall {
+  display: none;
+}

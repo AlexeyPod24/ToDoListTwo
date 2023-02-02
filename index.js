@@ -2,7 +2,11 @@
 const addButton = document.querySelector('.todo-button');
 const toDoInput = document.querySelector('.todo-input');
 const toDoUi =  document.querySelector('.todo-list');
-const editBtn = document.querySelector('edit-btn')
+const editBtn = document.querySelector('edit-btn');
+const filterOption = document.querySelector('.filter-todo');
+
+
+
 
 
 // Event Listeners
@@ -10,22 +14,40 @@ addButton.addEventListener('click', addToDoItem);
 toDoUi.addEventListener('click', deleteItem);
 toDoUi.addEventListener('click', completeItem);
 toDoUi.addEventListener('click', editItem);
+filterOption.addEventListener('click', filterToDo)
 
 
 
+
+
+let randomId = ''
+
+   function getRandomId() {
+    randomId = new Date().getTime().toString()
+
+
+   }
+
+   
 
 // Functions
 function addToDoItem(event) {
     // Our button is inside a form which defaults to submitting and resetting the forum, we need to stop that:
     event.preventDefault()
-    // Create DIV
+
+    if (toDoInput.value === '') {
+        toDoInput.setAttribute('placeholder', 'Please enter text')
+    } else {
+
+        // Create DIV
+    getRandomId()
     const div = document.createElement('div');
     div.classList.add('todo');
+    div.dataset.id = `${randomId}`
     // Create LI
     const li = document.createElement('li')
     li.innerHTML = `
-    <label for="checkbox" class="completed">Completed</label>
-    <input type="checkbox"  class="checkbox" name="checkbox">
+    <input type="checkbox"  class="checkbox" name="checkbox" data-id="${randomId}">
     <input type="text" class="generated-input" value="${toDoInput.value}" disabled="disabled">`
     li.classList.add('todo-item')
     div.append(li)
@@ -38,6 +60,13 @@ function addToDoItem(event) {
     editButton.classList.add('edit-btn')
     editButton.innerText = 'Edit'
     div.append(editButton)
+
+    // Save button
+    // const saveButton = document.createElement('button')
+    // saveButton.className = ('save-btn hideBtn')
+    // saveButton.innerText = 'Save'
+    // div.append(saveButton)
+
     // Delete button
     const deleteButton = document.createElement('button')
     deleteButton.classList.add('delete-btn')
@@ -47,6 +76,17 @@ function addToDoItem(event) {
     toDoUi.append(div);
 
     toDoInput.value = '';
+
+    
+    }
+    
+   
+    
+   
+    
+    
+
+    
    
 }
 
@@ -60,29 +100,52 @@ if (e.target.classList[0] === 'delete-btn') {
 }
 }
 
-
+// Edit Function
 function editItem(e) {
     if (e.target.classList[0] === 'edit-btn') {
-        document.querySelector('.generated-input').disabled = false;
-    }
-}
+        e.target.parentElement.querySelector('.generated-input').disabled = false;
+        e.target.parentElement.querySelector('.generated-input').focus();
+        e.target.classList.add('hideBtn')
 
 
-function completeItem(e) {
-    const checkedMark = document.querySelector('input[type="checkbox"]:checked')
-    if (checkedMark) {
-        e.target.closest(".todo").querySelector(".generated-input").style.backgroundColor = 'lightgreen'
-        e.target.closest(".todo").querySelector(".generated-input").style.textDecoration = 'line-through'
-        e.target.closest(".todo").querySelector(".completed").style.textDecoration = 'line-through'
-        e.target.closest(".todo").querySelector(".completed").style.backgroundColor = 'lightgreen'
+        const saveButton = document.createElement('button')
+        saveButton.className = ('save-btn')
+        saveButton.innerText = 'Save'
+        e.target.parentElement.firstChild.append(saveButton)
+
+        document.querySelector('.save-btn').addEventListener('click', saveItem)
+
+        function saveItem() {
+            
+            e.target.parentElement.querySelector('.generated-input').disabled = true;
+            e.target.parentElement.querySelector('.save-btn').remove()
+            e.target.parentElement.querySelector('.edit-btn').classList.remove('hideBtn')
+  
+        }
         
-    } else {
-        e.target.closest(".todo").querySelector(".generated-input").style.backgroundColor = 'white'
-        e.target.closest(".todo").querySelector(".generated-input").style.textDecoration = 'none'
-        e.target.closest(".todo").querySelector(".completed").style.textDecoration = 'none'
-        e.target.closest(".todo").querySelector(".completed").style.backgroundColor = 'lightgray'
+      
+    
+    
     }
+
 }
+
+
+
+
+// Complete Function
+function completeItem(e) {
+    const itemWrapper = e.target.closest(".todo");
+    if(!itemWrapper) return;
+    const checkedMark = itemWrapper.querySelector("[type=checkbox]");
+    const input = itemWrapper.querySelector("[type=text]")
+    if (checkedMark.checked) {
+      input.classList.add("test");
+      
+    } else
+      input.classList.remove("test");
+      
+  }
 
 
 // function saveLocalStorage(mydiv){
@@ -97,11 +160,56 @@ function completeItem(e) {
 //     localStorage.setItem('todos', JSON.stringify('todos'))
 // }
 
-// Problems:
 
-// When more than one is checked and you uncheck an input, it stays green until all are unchecked.
-// You can edit input with text, but only first one. The rest do not work.
-// I suspect it all has to do with e.target.closest
+// function filterToDo(e) {
+//  const todos = toDoUi.childNodes;
+//  todos.forEach((todo) => {
+//     switch(e.target.value) {
+//         case "all":
+//             todo.style.display = 'flex'
+//             break;
+//             case "completed":
+//                 if(todo.classList.contains('test')) {
+//                     todo.style.display = 'flex';
+//                 } else {
+//                     todo.style.display = 'none';
+//                 }
 
-// Todo
-// Fix bugs, save button after Edit, save to local storage.
+//     }
+//  })
+// }
+
+function filterToDo(e) {
+    let selectedvalue = filterOption.value
+    // const checkboxDiv = e.target.closest(".todo").querySelector("[type=checkbox]")
+    const todos = toDoUi.childNodes
+    todos.forEach((todo) => {
+        if (selectedvalue === "completed") {
+            const checkedDiv = todo.querySelector("[type=checkbox]:checked");
+            if (!checkedDiv) {
+                todo.classList.add('removeall')
+            }  else {
+                todo.classList.remove('removeall')
+            }
+            
+        } else if (selectedvalue === "not-completed") {
+            const checkedDiv = todo.querySelector("[type=checkbox]:checked")
+            if (checkedDiv) {
+                todo.classList.add('removeall')
+                
+            } else {
+                todo.classList.remove('removeall')
+            }
+        } else if (selectedvalue === 'all') {
+            const checkedDiv = todo.querySelector("[type=checkbox]:checked")
+            if (checkedDiv || !checkedDiv) {
+                todo.classList.remove('removeall')
+            }
+
+
+        }
+
+    })
+    
+}
+
